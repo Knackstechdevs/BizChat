@@ -18,8 +18,8 @@ const __dirname = path.resolve();
 const PORT = ENV.PORT || 3000;
 
 
-app.use(express.json()); //req.body
-app.use(cookieParser()) // when you have this imported here then you can now use cookieparser in your middleware
+app.use(express.json()); //req.body // this doesn't allow you to send anything larger than 50kb and you can get something like (payload too large error) but you can change this by passing an object to exceed that like - app.use(express.json({"limit:5MB"}))
+app.use(cookieParser()) // when you have this imported here then you can now use cookie-parser in your middleware
 
 
 app.use("/api/auth", authRoutes);
