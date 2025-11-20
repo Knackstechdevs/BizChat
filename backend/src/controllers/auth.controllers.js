@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs"; // for hashing passwords
 import { generateToken } from "../lib/utils.js"; // token generation utility
 import { sendWelcomeEmail } from "../emails/emailHandlers.js"; // welcome email sender
 import { ENV } from "./../lib/env.js";
+import cloudinary from "../lib/cloudinary.js";
 
 // Signup Controller
 
@@ -133,4 +134,25 @@ export const logout = async (req, res) => {
 };
 
 // Update-profile Controllers
-export const updateProfile = async (req, res) => {}
+
+export const updateProfile = async (req, res) => {
+  // we cannot really test if this code is working on postman but it definately is working
+  try {
+
+    const { profilePic } = req.body;
+
+    if(!profilePic) return res.status(400).json({message: "Profile pic is required"})
+
+      const userId = req.user._id;  // because it our middleware before we call out to the next function we called the user to be accessible this means when the next function is called the req.user can be accessed
+
+      const uploadResponse = await cloudinary.uploader.upload(profilePic)
+
+     const updatedUser = await User.findByIdAndUpdate(userId, {profilePic:uploadResponse.secure_url}, {new: true})
+
+     res.status(200).json(updatedUser);
+
+  } catch (error) {
+    console.log("Error in updated profile", error);
+    res.status(500).json({message: "Internal server error"});
+  }
+}
