@@ -1,4 +1,4 @@
-import User from "../models/User.model.js"; // User model
+import User from "../models/user.model.js"; // User model
 import bcrypt from "bcryptjs"; // for hashing passwords
 import { generateToken } from "../lib/utils.js"; // token generation utility
 import { sendWelcomeEmail } from "../emails/emailHandlers.js"; // welcome email sender
